@@ -10,20 +10,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SecurityApp">
         <activity
-            android:name=".SignUpActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            android:name=".SignInActivity"
+            android:exported="true" />
+        <activity android:name=".SignUpActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
-
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>

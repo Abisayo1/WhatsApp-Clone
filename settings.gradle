@@ -7,8 +7,13 @@ pluginManagement {
     plugins {
         id 'com.android.application' version '7.1.0-alpha12'
         id 'com.android.library' version '7.1.0-alpha12'
+
+
+
     }
 }
+
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -18,3 +23,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Security App"
 include ':app'
+

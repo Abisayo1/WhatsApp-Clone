@@ -11,7 +11,7 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     /**
@@ -22,6 +22,7 @@ buildscript {
 
     dependencies {
         classpath 'com.google.gms:google-services:4.3.10'
+        classpath 'com.android.tools.build:gradle:7.1.0-beta04'
 
     }
 }
@@ -29,3 +30,4 @@ buildscript {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

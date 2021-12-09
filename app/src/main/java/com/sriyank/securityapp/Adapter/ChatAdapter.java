@@ -1,6 +1,8 @@
 package com.sriyank.securityapp.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +12,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.sriyank.securityapp.Models.MessageModel;
 import com.sriyank.securityapp.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ChatAdapter extends RecyclerView.Adapter {
 
     ArrayList<MessageModel> messageModels;
     Context context;
+    String recId;
 
     int SENDER_VIEW_TYPE = 1;
     int RECEIVER_VIEW_TYPE = 2;
@@ -26,6 +32,12 @@ public class ChatAdapter extends RecyclerView.Adapter {
     public ChatAdapter(ArrayList<MessageModel> messageModels, Context context) {
         this.messageModels = messageModels;
         this.context = context;
+    }
+
+    public ChatAdapter(ArrayList<MessageModel> messageModels, Context context, String recId) {
+        this.messageModels = messageModels;
+        this.context = context;
+        this.recId = recId;
     }
 
     @NonNull
@@ -57,14 +69,55 @@ public class ChatAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MessageModel messageModel = messageModels.get(position);
 
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                new AlertDialog.Builder(context)
+                        .setTitle("Delete")
+                        .setMessage("Are you sure you want to delete this message?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                String senderRoom = FirebaseAuth.getInstance().getUid() + recId;
+                                database.getReference().child("chats").child(senderRoom)
+                                        .child(messageModel.getMessageId())
+                                        .setValue(null);
+
+                            }
+                        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+
+                return false;
+            }
+        });
+
         if (holder.getClass() == SenderViewHolder.class)
         {
-            ((SenderViewHolder)holder).senderMsg.setText(MessageModel.getMessage());
+            ((SenderViewHolder)holder).senderMsg.setText(messageModel.getMessage());
+
+            Date date = new Date(messageModel.getTimestamp());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
+            String strDate = simpleDateFormat.format(date);
+
+            ((SenderViewHolder)holder).senderTime.setText(strDate.toString());
         }
 
         else
         {
-            ((ReceiverViewHolder)holder).receiverMsg.setText(messageModel.getMessageId());
+            ((ReceiverViewHolder)holder).receiverMsg.setText(messageModel.getMessage());
+
+            Date date = new Date(messageModel.getTimestamp());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
+            String strDate = simpleDateFormat.format(date);
+
+            ((ReceiverViewHolder)holder).receiverTime.setText(strDate.toString());
         }
 
     }

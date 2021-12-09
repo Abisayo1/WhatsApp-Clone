@@ -28,7 +28,7 @@ public class MessageModel {
         this.uId = uId;
     }
 
-    public static String getMessage() {
+    public String getMessage() {
         return message;
     }
 

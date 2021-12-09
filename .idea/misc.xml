@@ -4,10 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/drawable/about.xml" value="0.1" />
+        <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/drawable/bg_et_message.xml" value="0.2085" />
+        <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/drawable/bg_receiver.xml" value="0.2085" />
+        <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/drawable/bg_sender.xml" value="0.2085" />
+        <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/activity_chat_detail.xml" value="0.25" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/activity_main.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/activity_sign_in.xml" value="0.25" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/activity_sign_up.xml" value="0.25" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/fragment_chats.xml" value="0.27291666666666664" />
+        <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/sample_receiver.xml" value="0.1956521739130435" />
+        <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/sample_sender.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/sample_show_user.xml" value="0.33" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/menu/menu.xml" value="0.27291666666666664" />
       </map>

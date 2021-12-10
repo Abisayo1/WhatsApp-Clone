@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.groupChat:
-                Toast.makeText(this, "Why you sey click me", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(MainActivity.this,GroupChatActivity.class);
+                startActivity(intent1);
                 break;
 
             case R.id.logout:

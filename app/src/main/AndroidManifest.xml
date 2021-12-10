@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SecurityApp">
         <activity
+            android:name=".GroupChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".ChatDetailActivity"
             android:exported="false" />
         <activity android:name=".SignInActivity">
@@ -20,7 +23,7 @@
             </intent-filter>
             android:exported="true" />
         </activity>
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SignUpActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />

@@ -63,6 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         finishAffinity();
 
                                     } else {
+
                                         Toast.makeText(SignUpActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
 
                                     }

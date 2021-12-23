@@ -12,7 +12,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+
     }
+
 
     /**
      * The dependencies block configures the dependencies Gradle needs to use
@@ -26,6 +28,8 @@ buildscript {
 
     }
 }
+
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir

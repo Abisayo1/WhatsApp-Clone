@@ -1,8 +1,10 @@
 package com.sriyank.securityapp;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,11 +12,18 @@ import android.view.View;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.sriyank.securityapp.Models.Users;
 import com.sriyank.securityapp.databinding.ActivitySetupProfileBinding;
+
+import java.util.Set;
 
 public class SetupProfileActivity extends AppCompatActivity {
 
@@ -22,6 +31,7 @@ public class SetupProfileActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseDatabase database;
     FirebaseStorage storage;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +43,55 @@ public class SetupProfileActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         database = FirebaseDatabase.getInstance();
 
+        dialog.setMessage("Uploading profile...");
+        dialog.setCancelable(false);
+
+        database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Users users = snapshot.getValue(Users.class);
+                        Picasso.get()
+                                .load(users.getProfilePic())
+                                .placeholder(R.drawable.avatar)
+                                .into(binding.imageView);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
         binding.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
-                startActivityForResult(intent, 25);
+                startActivityForResult(intent, 45);
+            }
+        });
+
+
+        binding.continueBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+                String name = binding.nameBox.getText().toString();
+                if (name.isEmpty()) {
+                    binding.nameBox.setError("Please type a name");
+                    return;
+
+                }
+
+                else
+                {
+                    Intent intent = new Intent(SetupProfileActivity.this, ChatDetailActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
     }
@@ -64,6 +116,7 @@ public class SetupProfileActivity extends AppCompatActivity {
                             public void onSuccess(Uri uri) {
                                 database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
                                         .child("profilePic").setValue(uri.toString());
+                                dialog.dismiss();
                             }
                         });
                     }

@@ -10,6 +10,7 @@
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/drawable/btn_bg.xml" value="0.2085" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/drawable/circle_bg.xml" value="0.2085" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/drawable/circle_green.xml" value="0.2775" />
+        <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/drawable/ic_search.xml" value="0.2085" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/drawable/linear_bg.xml" value="0.2085" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/activity_chat_detail.xml" value="0.25" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/activity_group_chat.xml" value="0.1956521739130435" />
@@ -18,7 +19,9 @@
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/activity_setup_profile.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/activity_sign_in.xml" value="0.25" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/activity_sign_up.xml" value="0.25" />
+        <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/fragment_calls.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/fragment_chats.xml" value="0.27291666666666664" />
+        <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/fragment_status.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/sample_receiver.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/sample_sender.xml" value="0.5" />
         <entry key="..\:/Users/dell/AndroidStudioProjects/SecurityApp/app/src/main/res/layout/sample_show_user.xml" value="0.33" />

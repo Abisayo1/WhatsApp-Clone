@@ -1,7 +1,7 @@
 package com.sriyank.securityapp.Models;
 
 public class Users {
-    String profilePic, userName, mail, password, userId, lastMessage, status;
+    private String profilePic, userName, mail, password, userId, lastMessage, status, token;
 
     public Users(String profilePic, String userName, String mail, String password, String userId, String lastMessage, String status) {
         this.profilePic = profilePic;
@@ -78,5 +78,13 @@ public class Users {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

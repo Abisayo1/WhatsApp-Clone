@@ -10,13 +10,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.sriyank.securityapp.Adapter.FragmentAdapter;
 import com.sriyank.securityapp.databinding.ActivityMainBinding;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
+    FirebaseDatabase database;
     FirebaseAuth mAuth;
 
     @Override
@@ -24,6 +30,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        database = FirebaseDatabase.getInstance();
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnSuccessListener(new OnSuccessListener<String>() {
+                    @Override
+                    public void onSuccess(String token) {
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("token", token);
+                        database.getReference().child("Users")
+                                .child(FirebaseAuth.getInstance().getUid())
+                                .updateChildren(map);
+                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+
+                    }
+                });
 
         mAuth = FirebaseAuth.getInstance();
 

@@ -59,6 +59,16 @@ public class ChatDetailActivity extends AppCompatActivity {
             }
         });
 
+        binding.attachment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 25);
+            }
+        });
+
         final ArrayList<MessageModel> messageModels = new ArrayList<>();
         final ChatAdapter chatAdapter = new ChatAdapter(messageModels, this, receiveId);
 

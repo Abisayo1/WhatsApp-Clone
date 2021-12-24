@@ -1,14 +1,13 @@
 package com.sriyank.securityapp.Fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +47,7 @@ public class ChatsFragment extends Fragment {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.chatRecyclerView.setLayoutManager(layoutManager);
+        binding.shimmerLayout.startShimmer();
 
         database.getReference().child("Users").addValueEventListener(new ValueEventListener() {
             @Override
@@ -59,6 +59,12 @@ public class ChatsFragment extends Fragment {
                     if (!users.getUserId().equals(FirebaseAuth.getInstance().getUid())){
                         list.add(users);
                     }
+
+                    binding.shimmerLayout.stopShimmer();
+                    binding.shimmerLayout.setVisibility(View.GONE);
+                    binding.chatRecyclerView.setVisibility(View.VISIBLE);
+                    binding.frame.setBackgroundResource(R.drawable.w2);
+
 
 
                 }

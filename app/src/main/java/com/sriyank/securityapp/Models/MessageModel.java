@@ -2,7 +2,19 @@ package com.sriyank.securityapp.Models;
 
 public class MessageModel {
 
-    String uId, message, messageId;
+    String uId;
+    String message;
+    String messageId;
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    String imageUri;
     Long timestamp;
 
     public MessageModel(String uId, String message, Long timestamp) {

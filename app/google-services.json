@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "168891931522",
+    "project_id": "security-app-55953",
+    "storage_bucket": "security-app-55953.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168891931522:android:b8e94ca29999dd75a0cd9b",
+        "android_client_info": {
+          "package_name": "com.sriyank.securityapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "168891931522-dhiuuf7vl8d9ssiak69rok3k783g9cu4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAIhvWJDbJvvb49cXq-zeA21MJTezYe8o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "168891931522-dhiuuf7vl8d9ssiak69rok3k783g9cu4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

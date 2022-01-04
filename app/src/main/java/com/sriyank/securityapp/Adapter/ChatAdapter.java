@@ -109,10 +109,13 @@ public class ChatAdapter extends RecyclerView.Adapter {
             if (messageModel.getMessage().equals("photo")){
                 viewHolder.binding.image2.setVisibility(View.VISIBLE);
                 viewHolder.binding.message.setVisibility(View.GONE);
-                Glide.with(context).load(messageModel.getImageUri()).into(viewHolder.binding.image2);
+                Glide.with(context)
+                        .load(messageModel.getImageUri())
+                        .placeholder(R.drawable.placeholder)
+                        .into(viewHolder.binding.image2);
             }
 
-//            viewHolder.binding.message.setText(message.getMessage());
+
             ((SenderViewHolder)holder).binding.message.setText(messageModel.getMessage());
 
             Date date = new Date(messageModel.getTimestamp());
@@ -126,6 +129,18 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
         else
         {
+
+            ReceiverViewHolder viewHolder = (ReceiverViewHolder)holder;
+
+            if (messageModel.getMessage().equals("photo")){
+                viewHolder.binding.image.setVisibility(View.VISIBLE);
+                viewHolder.binding.message.setVisibility(View.GONE);
+                Glide.with(context)
+                        .load(messageModel.getImageUri())
+                        .placeholder(R.drawable.placeholder)
+                        .into(viewHolder.binding.image);
+            }
+
             ((ReceiverViewHolder)holder).binding.message.setText(messageModel.getMessage());
 
             Date date = new Date(messageModel.getTimestamp());

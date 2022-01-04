@@ -4,6 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
@@ -12,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -67,6 +71,36 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         Toast.makeText(this, token + "game", Toast.LENGTH_SHORT).show();
 
+        Glide.with(ChatDetailActivity.this)
+                .load(profilePic)
+                .placeholder(R.drawable.avatar)
+                .into(binding.profileImage);
+
+        binding.profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        database.getReference().child("presence").child(receiveId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String status = snapshot.getValue(String.class);
+                    if (!status.isEmpty()) {
+                        binding.status.setText(status);
+                        binding.status.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         binding.userName.setText(userName);
         Picasso.get().load(profilePic).placeholder(R.drawable.avatar).into(binding.profileImage);
 
@@ -90,6 +124,34 @@ public class ChatDetailActivity extends AppCompatActivity {
             }
         });
 
+        final Handler handler = new Handler();
+        binding.enterMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                database.getReference().child("presence").child(senderId).setValue("typing");
+                handler.removeCallbacksAndMessages(null);
+                handler.postDelayed(userStoppedTyping, 1000);
+
+            }
+
+            Runnable userStoppedTyping = new Runnable() {
+                @Override
+                public void run() {
+                    database.getReference().child("presence").child(senderId).setValue("Online");
+
+                }
+            };
+        });
 
 
         binding.chatRecyclerView.setAdapter(chatAdapter);
@@ -107,8 +169,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         messageModels.clear();
-                        for (DataSnapshot snapshot1 : snapshot.getChildren())
-                        {
+                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                             MessageModel model = snapshot1.getValue(MessageModel.class);
                             model.setMessageId(snapshot1.getKey());
                             messageModels.add(model);
@@ -158,54 +219,68 @@ public class ChatDetailActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 25){
-        if (data != null) {
-            if (data.getData() != null) {
-                Uri selectedImage = data.getData();
-                Calendar calender = Calendar.getInstance();
-                StorageReference reference = storage.getReference().child("chats").child(calender.getTimeInMillis() + "");
-                dialog.show();
-                reference.putFile(selectedImage).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        dialog.dismiss();
-                        if (task.isSuccessful()) {
-                            reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    String filepath = uri.toString();
-                                    String message = binding.enterMessage.getText().toString();
-                                    final MessageModel model = new MessageModel(senderId, message);
-                                    model.setTimestamp(new Date().getTime());
-                                    model.setImageUri(filepath);
-                                    model.setMessage("photo");
-                                    binding.enterMessage.setText("");
+        if (requestCode == 25) {
+            if (data != null) {
+                if (data.getData() != null) {
+                    Uri selectedImage = data.getData();
+                    Calendar calender = Calendar.getInstance();
+                    StorageReference reference = storage.getReference().child("chats").child(calender.getTimeInMillis() + "");
+                    dialog.show();
+                    reference.putFile(selectedImage).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            dialog.dismiss();
+                            if (task.isSuccessful()) {
+                                reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String filepath = uri.toString();
+                                        String message = binding.enterMessage.getText().toString();
+                                        final MessageModel model = new MessageModel(senderId, message);
+                                        model.setTimestamp(new Date().getTime());
+                                        model.setImageUri(filepath);
+                                        model.setMessage("photo");
+                                        binding.enterMessage.setText("");
 
-                                    database.getReference().child("chats")
-                                            .child(senderRoom)
-                                            .push()
-                                            .setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            database.getReference().child("chats")
-                                                    .child(receiverRoom)
-                                                    .push()
-                                                    .setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
+                                        database.getReference().child("chats")
+                                                .child(senderRoom)
+                                                .push()
+                                                .setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                database.getReference().child("chats")
+                                                        .child(receiverRoom)
+                                                        .push()
+                                                        .setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
 
-                                                }
-                                            });
-                                        }
-                                    });
-                                    Toast.makeText(ChatDetailActivity.this, filepath, Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                        Toast.makeText(ChatDetailActivity.this, filepath, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
-        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String currentId = FirebaseAuth.getInstance().getUid();
+        database.getReference().child("presence").child(currentId).setValue("Online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        String currentId = FirebaseAuth.getInstance().getUid();
+        database.getReference().child("presence").child(currentId).setValue("Offline");
     }
 }

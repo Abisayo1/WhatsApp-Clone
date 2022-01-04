@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.bumptech.glide.Glide;
 import com.sriyank.securityapp.Fragments.StatusFragment;
 import com.sriyank.securityapp.MainActivity;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import omari.hamza.storyview.StoryView;
 import omari.hamza.storyview.callback.StoryClickListeners;
 import omari.hamza.storyview.model.MyStory;
+
 
 public class TopStatusAdapter extends RecyclerView.Adapter<TopStatusAdapter.TopStatusViewHolder> {
 

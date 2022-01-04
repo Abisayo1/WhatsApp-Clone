@@ -11,10 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.sriyank.securityapp.Models.MessageModel;
 import com.sriyank.securityapp.R;
+import com.sriyank.securityapp.databinding.ItemReceiveBinding;
+import com.sriyank.securityapp.databinding.ItemSentBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
     ArrayList<MessageModel> messageModels;
     Context context;
     String recId;
+
 
     int SENDER_VIEW_TYPE = 1;
     int RECEIVER_VIEW_TYPE = 2;
@@ -44,11 +48,11 @@ public class ChatAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == SENDER_VIEW_TYPE){
-            View view = LayoutInflater.from(context).inflate(R.layout.sample_sender, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_sent, parent, false);
             return new SenderViewHolder(view);
         }
         else {
-            View view = LayoutInflater.from(context).inflate(R.layout.sample_receiver, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_receive, parent, false);
             return new ReceiverViewHolder(view);
         }
     }
@@ -100,24 +104,35 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
         if (holder.getClass() == SenderViewHolder.class)
         {
-            ((SenderViewHolder)holder).senderMsg.setText(messageModel.getMessage());
+            SenderViewHolder viewHolder = (SenderViewHolder)holder;
+
+            if (messageModel.getMessage().equals("photo")){
+                viewHolder.binding.image2.setVisibility(View.VISIBLE);
+                viewHolder.binding.message.setVisibility(View.GONE);
+                Glide.with(context).load(messageModel.getImageUri()).into(viewHolder.binding.image2);
+            }
+
+//            viewHolder.binding.message.setText(message.getMessage());
+            ((SenderViewHolder)holder).binding.message.setText(messageModel.getMessage());
 
             Date date = new Date(messageModel.getTimestamp());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
             String strDate = simpleDateFormat.format(date);
 
-            ((SenderViewHolder)holder).senderTime.setText(strDate.toString());
+            ((SenderViewHolder)holder).binding.senderTime.setText(strDate.toString());
+
+
         }
 
         else
         {
-            ((ReceiverViewHolder)holder).receiverMsg.setText(messageModel.getMessage());
+            ((ReceiverViewHolder)holder).binding.message.setText(messageModel.getMessage());
 
             Date date = new Date(messageModel.getTimestamp());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
             String strDate = simpleDateFormat.format(date);
 
-            ((ReceiverViewHolder)holder).receiverTime.setText(strDate.toString());
+            ((ReceiverViewHolder)holder).binding.receiverTime.setText(strDate.toString());
         }
 
     }
@@ -129,24 +144,21 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
     public class ReceiverViewHolder extends RecyclerView.ViewHolder{
 
-        TextView receiverMsg, receiverTime;
+        ItemReceiveBinding binding;
 
         public ReceiverViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            receiverMsg = itemView.findViewById(R.id.receiverText);
-            receiverTime = itemView.findViewById(R.id.receiverTime);
+            binding = ItemReceiveBinding.bind(itemView);
         }
     }
 
     public class SenderViewHolder extends RecyclerView.ViewHolder{
+        ItemSentBinding binding;
 
-        TextView senderMsg, senderTime;
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
+            binding = ItemSentBinding.bind(itemView);
 
-            senderMsg = itemView.findViewById(R.id.senderText);
-            senderTime = itemView.findViewById(R.id.senderTime);
         }
     }
 }

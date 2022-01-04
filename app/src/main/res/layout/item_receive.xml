@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/image2"
+            android:id="@+id/image"
             android:layout_width="200dp"
             android:layout_height="130dp"
             android:layout_margin="5dp"
@@ -34,16 +34,17 @@
             android:paddingBottom="5dp"
             android:text="TextView"
             android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/receiverTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:paddingLeft="29dp"
+            android:layout_marginBottom="4dp"
+            android:text="12:45pm"
+            android:textSize="10sp" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/feeling"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout2"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout2"
-        app:srcCompat="@drawable/ic_fb_love" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -239,7 +239,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                                         final MessageModel model = new MessageModel(senderId, message);
                                         model.setTimestamp(new Date().getTime());
                                         model.setImageUri(filepath);
-                                        model.setMessage("photo");
+                                        model.setMessage("pho122343553412641638347456764764768763419876187712@to");
                                         binding.enterMessage.setText("");
 
                                         database.getReference().child("chats")

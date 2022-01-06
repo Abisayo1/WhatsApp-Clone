@@ -106,7 +106,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
         {
             SenderViewHolder viewHolder = (SenderViewHolder)holder;
 
-            if (messageModel.getMessage().equals("photo")){
+            if (messageModel.getMessage().equals("pho122343553412641638347456764764768763419876187712@to")){
                 viewHolder.binding.image2.setVisibility(View.VISIBLE);
                 viewHolder.binding.message.setVisibility(View.GONE);
                 Glide.with(context)
@@ -132,7 +132,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
             ReceiverViewHolder viewHolder = (ReceiverViewHolder)holder;
 
-            if (messageModel.getMessage().equals("photo")){
+            if (messageModel.getMessage().equals("pho122343553412641638347456764764768763419876187712@to")){
                 viewHolder.binding.image.setVisibility(View.VISIBLE);
                 viewHolder.binding.message.setVisibility(View.GONE);
                 Glide.with(context)

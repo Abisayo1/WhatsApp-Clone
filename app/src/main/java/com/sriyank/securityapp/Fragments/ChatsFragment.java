@@ -1,5 +1,6 @@
 package com.sriyank.securityapp.Fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,7 @@ public class ChatsFragment extends Fragment {
         binding.shimmerLayout.startShimmer();
 
         database.getReference().child("Users").addValueEventListener(new ValueEventListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
@@ -63,7 +65,6 @@ public class ChatsFragment extends Fragment {
                     binding.shimmerLayout.stopShimmer();
                     binding.shimmerLayout.setVisibility(View.GONE);
                     binding.chatRecyclerView.setVisibility(View.VISIBLE);
-                    binding.frame.setBackgroundResource(R.drawable.w2);
 
 
 

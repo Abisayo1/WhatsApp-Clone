@@ -15,6 +15,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,9 +38,14 @@ import com.sriyank.securityapp.Adapter.ChatAdapter;
 import com.sriyank.securityapp.Models.MessageModel;
 import com.sriyank.securityapp.databinding.ActivityChatDetailBinding;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChatDetailActivity extends AppCompatActivity {
 
@@ -69,7 +80,7 @@ public class ChatDetailActivity extends AppCompatActivity {
         String profilePic = getIntent().getStringExtra("profilePic");
         String token = getIntent().getStringExtra("token");
 
-        Toast.makeText(this, token + "game", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, token + "game", Toast.LENGTH_SHORT).show();
 
         Glide.with(ChatDetailActivity.this)
                 .load(profilePic)
@@ -204,6 +215,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                                 .setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
+                                sendNotification(userName, model.getMessage(), token);
 
                             }
                         });
@@ -213,6 +225,52 @@ public class ChatDetailActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    void sendNotification(String name, String message, String token) {
+
+        try {
+            RequestQueue queue = Volley.newRequestQueue(this);
+
+            String url = "https://fcm.googleapis.com/fcm/send";
+
+            JSONObject data = new JSONObject();
+            data.put("title", name);
+            data.put("body", message);
+            JSONObject notificationData = new JSONObject();
+            notificationData.put("notification", data);
+            notificationData.put("to", token);
+
+            JsonObjectRequest request = new JsonObjectRequest(url, notificationData
+                    , new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Toast.makeText(ChatDetailActivity.this, "success", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(ChatDetailActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+        }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> map = new HashMap<>();
+                    String key = "Key=AAAAJ1K-W4I:APA91bE7OlAHKV_6pOLvCi8bj6LizkhIHYlFNhGUx_ykzQKR1eepMYiTaTJ9ArjY-0gkm4ulAFj0KEI_JEWki-e1y4AE6YgJoQzb3WUiDljhVBnsZo-LHH9H-QyoZ809tpRbEfhY_W-p";
+                    map.put("Authorization", key);
+                    map.put("Content-Type", "application/json");
+                    return map;
+                }
+            };
+
+            queue.add(request);
+
+        } catch (Exception ex) {
+
+        }
     }
 
     @Override

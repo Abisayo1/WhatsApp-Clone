@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.sriyank.securityapp.Adapter.FragmentAdapter;
 import com.sriyank.securityapp.databinding.ActivityMainBinding;
 
@@ -32,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
+
 
         binding.viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                         database.getReference().child("Users")
                                 .child(FirebaseAuth.getInstance().getUid())
                                 .updateChildren(map);
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -105,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         String currentId = FirebaseAuth.getInstance().getUid();
-        database.getReference().child("presence").child(currentId).setValue("Offline");
+        if (currentId != null){
+        database.getReference().child("presence").child(currentId).setValue("Offline");}
 
 
     }
@@ -128,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.logout:
+                onPause();
                 mAuth.signOut();
                 Intent intent = new Intent(MainActivity.this, SignInActivity.class);
                 startActivity(intent);

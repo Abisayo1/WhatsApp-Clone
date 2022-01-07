@@ -43,8 +43,8 @@ public class SetupProfileActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         database = FirebaseDatabase.getInstance();
 
-        dialog.setMessage("Uploading profile...");
-        dialog.setCancelable(false);
+        dialog = new ProgressDialog(SetupProfileActivity.this);
+        dialog.setMessage("Uploading Image...");
 
         database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -88,7 +88,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
                 else
                 {
-                    Intent intent = new Intent(SetupProfileActivity.this, ChatDetailActivity.class);
+                    Intent intent = new Intent(SetupProfileActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
 

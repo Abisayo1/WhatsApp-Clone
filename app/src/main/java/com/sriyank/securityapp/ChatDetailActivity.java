@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -36,6 +38,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.sriyank.securityapp.Adapter.ChatAdapter;
 import com.sriyank.securityapp.Models.MessageModel;
+import com.sriyank.securityapp.Models.Users;
 import com.sriyank.securityapp.databinding.ActivityChatDetailBinding;
 
 import org.json.JSONException;
@@ -57,6 +60,13 @@ public class ChatDetailActivity extends AppCompatActivity {
     String senderId;
     String senderRoom, receiverRoom;
     String receiveId;
+    String userName;
+    private FirebaseAuth mAuth;
+    private String Uid;
+
+    private DatabaseReference reference;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +86,7 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         senderId = auth.getUid();
         String receiveId = getIntent().getStringExtra("userId");
-        String userName = getIntent().getStringExtra("userName");
+//        String userName = getIntent().getStringExtra("userName");
         String profilePic = getIntent().getStringExtra("profilePic");
         String token = getIntent().getStringExtra("token");
 
@@ -93,6 +103,15 @@ public class ChatDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
+        Uid = auth.getCurrentUser().getUid().toString();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        if (!Uid.isEmpty()){
+            getUserData();
+        }
+
+
 
         database.getReference().child("presence").child(receiveId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -203,6 +222,9 @@ public class ChatDetailActivity extends AppCompatActivity {
                 binding.enterMessage.setText("");
 
 
+//                Toast.makeText(ChatDetailActivity.this, userName, Toast.LENGTH_SHORT).show();
+
+
                 database.getReference().child("chats")
                         .child(senderRoom)
                         .push()
@@ -227,6 +249,21 @@ public class ChatDetailActivity extends AppCompatActivity {
 
     }
 
+    private void getUserData() {
+        reference.child(Uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users user = snapshot.getValue(Users.class);
+                userName = user.getUserName();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     void sendNotification(String name, String message, String token) {
 
         try {
@@ -245,7 +282,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                     , new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Toast.makeText(ChatDetailActivity.this, "success", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ChatDetailActivity.this, "success", Toast.LENGTH_SHORT).show();
 
                 }
 

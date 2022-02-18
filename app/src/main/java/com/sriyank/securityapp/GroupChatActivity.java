@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.sriyank.securityapp.Adapter.ChatAdapter;
 import com.sriyank.securityapp.Models.MessageModel;
 import com.sriyank.securityapp.databinding.ActivityGroupChatBinding;
@@ -31,6 +34,11 @@ public class GroupChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityGroupChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("MyUser", Context.MODE_PRIVATE);
+        String name = sp.getString("name", "Message");
+
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
 
         getSupportActionBar().hide();
 
@@ -76,8 +84,8 @@ public class GroupChatActivity extends AppCompatActivity {
         binding.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String message = binding.enterMessage.getText().toString();
-                final MessageModel model = new MessageModel(senderId, message);
+                 String message = binding.enterMessage.getText().toString();
+                 MessageModel model = new MessageModel(senderId, message);
                 model.setTimestamp(new Date().getTime());
 
                 binding.enterMessage.setText(null);
@@ -87,10 +95,15 @@ public class GroupChatActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
+
+                                FcmNotificationsSender notificationsSender = new FcmNotificationsSender("/topics/all",
+                                        name, message,getApplicationContext(),GroupChatActivity.this);
+                                notificationsSender.SendNotifications();
                                 Toast.makeText(GroupChatActivity.this, "Message Sent", Toast.LENGTH_SHORT).show();
 
                             }
                         });
+
             }
         });
     }

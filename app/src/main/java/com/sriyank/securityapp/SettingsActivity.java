@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,12 +35,17 @@ public class SettingsActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseDatabase database;
     FirebaseStorage storage;
+    EditText userName;
+    SharedPreferences sp;
+    String nameStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySettingsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        userName = binding.txtUsername;
+        sp = getSharedPreferences("MyUser", Context.MODE_PRIVATE);
 
         getSupportActionBar().hide();
 
@@ -56,6 +64,12 @@ public class SettingsActivity extends AppCompatActivity {
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                nameStr = userName.getText().toString();
+
+                SharedPreferences.Editor editor = sp.edit();
+
+                editor.putString("name", nameStr);
+                editor.commit();
                 if (!binding.etStatus.getText().toString().equals(null) && !binding.txtUsername.getText().toString().equals(null)){
 
 

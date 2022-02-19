@@ -22,12 +22,14 @@ import com.sriyank.securityapp.Adapter.ChatAdapter;
 import com.sriyank.securityapp.Models.MessageModel;
 import com.sriyank.securityapp.databinding.ActivityGroupChatBinding;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class GroupChatActivity extends AppCompatActivity {
 
     ActivityGroupChatBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,9 @@ public class GroupChatActivity extends AppCompatActivity {
         SharedPreferences sp = getApplicationContext().getSharedPreferences("MyUser", Context.MODE_PRIVATE);
         String name = sp.getString("name", "Message");
 
+
         FirebaseMessaging.getInstance().subscribeToTopic("all");
+
 
         getSupportActionBar().hide();
 
@@ -84,6 +88,8 @@ public class GroupChatActivity extends AppCompatActivity {
         binding.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic("all");
+
                  String message = binding.enterMessage.getText().toString();
                  MessageModel model = new MessageModel(senderId, message);
                 model.setTimestamp(new Date().getTime());
@@ -101,10 +107,24 @@ public class GroupChatActivity extends AppCompatActivity {
                                 notificationsSender.SendNotifications();
                                 Toast.makeText(GroupChatActivity.this, "Message Sent", Toast.LENGTH_SHORT).show();
 
+                                new java.util.Timer().schedule(
+                                        new java.util.TimerTask() {
+                                            @Override
+                                            public void run() {
+                                                FirebaseMessaging.getInstance().subscribeToTopic("all");
+                                            }
+                                        },
+                                        5000
+                                );
+
+
                             }
                         });
 
+
+
             }
         });
+
     }
 }

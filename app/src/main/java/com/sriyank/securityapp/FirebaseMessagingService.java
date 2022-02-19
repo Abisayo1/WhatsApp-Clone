@@ -24,6 +24,8 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Objects;
+
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
      NotificationManager mNotificationManager;
@@ -48,7 +50,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         v.vibrate(pattern, -1);
 
 
-        int resourceImage = getResources().getIdentifier(remoteMessage.getNotification().getIcon(), "drawable", getPackageName());
+        int resourceImage = getResources().getIdentifier(Objects.requireNonNull(remoteMessage.getNotification()).getIcon(), "drawable", getPackageName());
 
 
 
@@ -63,7 +65,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
 
 
-        Intent resultIntent = new Intent(this, ChatDetailActivity.class);
+        Intent resultIntent = new Intent(this, GroupChatActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 

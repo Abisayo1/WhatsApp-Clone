@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.animation.ArgbEvaluatorCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,6 +50,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ChatDetailActivity extends AppCompatActivity {
 
@@ -65,7 +67,7 @@ public class ChatDetailActivity extends AppCompatActivity {
     private String Uid;
 
     private DatabaseReference reference;
-
+    private ArgbEvaluatorCompat FirebaseInstanceId;
 
 
     @Override
@@ -73,6 +75,7 @@ public class ChatDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityChatDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
 
         dialog = new ProgressDialog(this);
         dialog.setMessage("Uploading image...");
@@ -237,7 +240,10 @@ public class ChatDetailActivity extends AppCompatActivity {
                                 .setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
-                                sendNotification(userName, model.getMessage(), token);
+
+                                FcmNotificationsSender notificationsSender = new FcmNotificationsSender(token, userName, model.getMessage(), getApplicationContext(), ChatDetailActivity.this);
+                                notificationsSender.SendNotifications();
+
 
                             }
                         });
@@ -264,51 +270,51 @@ public class ChatDetailActivity extends AppCompatActivity {
         });
     }
 
-    void sendNotification(String name, String message, String token) {
-
-        try {
-            RequestQueue queue = Volley.newRequestQueue(this);
-
-            String url = "https://fcm.googleapis.com/fcm/send";
-
-            JSONObject data = new JSONObject();
-            data.put("title", name);
-            data.put("body", message);
-            JSONObject notificationData = new JSONObject();
-            notificationData.put("notification", data);
-            notificationData.put("to", token);
-
-            JsonObjectRequest request = new JsonObjectRequest(url, notificationData
-                    , new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-//                    Toast.makeText(ChatDetailActivity.this, "success", Toast.LENGTH_SHORT).show();
-
-                }
-
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(ChatDetailActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-
-                }
-        }) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> map = new HashMap<>();
-                    String key = "Key=AAAAJ1K-W4I:APA91bE7OlAHKV_6pOLvCi8bj6LizkhIHYlFNhGUx_ykzQKR1eepMYiTaTJ9ArjY-0gkm4ulAFj0KEI_JEWki-e1y4AE6YgJoQzb3WUiDljhVBnsZo-LHH9H-QyoZ809tpRbEfhY_W-p";
-                    map.put("Authorization", key);
-                    map.put("Content-Type", "application/json");
-                    return map;
-                }
-            };
-
-            queue.add(request);
-
-        } catch (Exception ex) {
-
-        }
-    }
+//    void sendNotification(String name, String message, String token) {
+//
+//        try {
+//            RequestQueue queue = Volley.newRequestQueue(this);
+//
+//            String url = "https://fcm.googleapis.com/fcm/send";
+//
+//            JSONObject data = new JSONObject();
+//            data.put("title", name);
+//            data.put("body", message);
+//            JSONObject notificationData = new JSONObject();
+//            notificationData.put("notification", data);
+//            notificationData.put("to", token);
+//
+//            JsonObjectRequest request = new JsonObjectRequest(url, notificationData
+//                    , new Response.Listener<JSONObject>() {
+//                @Override
+//                public void onResponse(JSONObject response) {
+////                    Toast.makeText(ChatDetailActivity.this, "success", Toast.LENGTH_SHORT).show();
+//
+//                }
+//
+//            }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError error) {
+//                    Toast.makeText(ChatDetailActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+//
+//                }
+//        }) {
+//                @Override
+//                public Map<String, String> getHeaders() throws AuthFailureError {
+//                    HashMap<String, String> map = new HashMap<>();
+//                    String key = "Key=AAAAJ1K-W4I:APA91bE7OlAHKV_6pOLvCi8bj6LizkhIHYlFNhGUx_ykzQKR1eepMYiTaTJ9ArjY-0gkm4ulAFj0KEI_JEWki-e1y4AE6YgJoQzb3WUiDljhVBnsZo-LHH9H-QyoZ809tpRbEfhY_W-p";
+//                    map.put("Authorization", key);
+//                    map.put("Content-Type", "application/json");
+//                    return map;
+//                }
+//            };
+//
+//            queue.add(request);
+//
+//        } catch (Exception ex) {
+//
+//        }
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
